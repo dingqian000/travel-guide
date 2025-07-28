@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打包清单 - 旅游攻略助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">🌟 旅游攻略助手</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">🏠 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="guide.html">📖 攻略详情</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="budget.html">💰 预算计算</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="checklist.html">🎒 打包清单</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- 进度条 -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">📋 打包进度</h5>
+                    <span id="progress-text" class="text-muted">准备开始...</span>
+                </div>
+                <div class="progress">
+                    <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="mt-3">
+                    <button onclick="toggleAllItems(true)" class="btn btn-success btn-sm me-2">✅ 全选</button>
+                    <button onclick="toggleAllItems(false)" class="btn btn-warning btn-sm me-2">❌ 全不选</button>
+                    <button onclick="printPage()" class="btn btn-info btn-sm">🖨️ 打印清单</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-xl-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>衣物类</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_6456406243229610303" class="form-check-input">
+                            <label for="item_6456406243229610303" class="form-check-label">轻薄透气夏装 3-4套</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_1574679787869964856" class="form-check-input">
+                            <label for="item_1574679787869964856" class="form-check-label">薄外套或冲锋衣 1件</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_1364918551651189874" class="form-check-input">
+                            <label for="item_1364918551651189874" class="form-check-label">速干衣/泳衣 1套</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_4463993447014056459" class="form-check-input">
+                            <label for="item_4463993447014056459" class="form-check-label">内衣裤 4-5套</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-6482538632684575231" class="form-check-input">
+                            <label for="item_-6482538632684575231" class="form-check-label">袜子 4-5双</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_3297053688223031596" class="form-check-input">
+                            <label for="item_3297053688223031596" class="form-check-label">舒适运动鞋 1双</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-6304339483149417597" class="form-check-input">
+                            <label for="item_-6304339483149417597" class="form-check-label">凉鞋/拖鞋 1双</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>防护用品</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-4751524863502353706" class="form-check-input">
+                            <label for="item_-4751524863502353706" class="form-check-label">高倍数防晒霜</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_7171183668463005373" class="form-check-input">
+                            <label for="item_7171183668463005373" class="form-check-label">太阳帽</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-1118337565067025714" class="form-check-input">
+                            <label for="item_-1118337565067025714" class="form-check-label">太阳镜</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-6082503290197352729" class="form-check-input">
+                            <label for="item_-6082503290197352729" class="form-check-label">驱蚊液</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_7469572179040155883" class="form-check-input">
+                            <label for="item_7469572179040155883" class="form-check-label">花露水</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-3090389215170238142" class="form-check-input">
+                            <label for="item_-3090389215170238142" class="form-check-label">雨衣或雨伞</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>电子设备</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_1871838744352731838" class="form-check-input">
+                            <label for="item_1871838744352731838" class="form-check-label">手机及充电器</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_8386532815725667012" class="form-check-input">
+                            <label for="item_8386532815725667012" class="form-check-label">充电宝</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_658827118012653237" class="form-check-input">
+                            <label for="item_658827118012653237" class="form-check-label">相机及存储卡</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-3546757108351018470" class="form-check-input">
+                            <label for="item_-3546757108351018470" class="form-check-label">手机防水袋</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_8550437886301021812" class="form-check-input">
+                            <label for="item_8550437886301021812" class="form-check-label">转换插头</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>个人用品</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_3077332060359981049" class="form-check-input">
+                            <label for="item_3077332060359981049" class="form-check-label">洗漱用品</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_4940097084901967475" class="form-check-input">
+                            <label for="item_4940097084901967475" class="form-check-label">毛巾</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-3628819634856719410" class="form-check-input">
+                            <label for="item_-3628819634856719410" class="form-check-label">湿纸巾</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-5014855381582126466" class="form-check-input">
+                            <label for="item_-5014855381582126466" class="form-check-label">纸巾</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_4732692941391136324" class="form-check-input">
+                            <label for="item_4732692941391136324" class="form-check-label">个人护肤品</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>药品类</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_7758215329155204652" class="form-check-input">
+                            <label for="item_7758215329155204652" class="form-check-label">感冒药</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-1321373229906898816" class="form-check-input">
+                            <label for="item_-1321373229906898816" class="form-check-label">肠胃药</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-3850416639654333935" class="form-check-input">
+                            <label for="item_-3850416639654333935" class="form-check-label">创可贴</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_5672599849397282648" class="form-check-input">
+                            <label for="item_5672599849397282648" class="form-check-label">晕车药</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-5992929675777880842" class="form-check-input">
+                            <label for="item_-5992929675777880842" class="form-check-label">抗过敏药</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-2968370177077530659" class="form-check-input">
+                            <label for="item_-2968370177077530659" class="form-check-label">体温计</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>证件类</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-5829676981963836974" class="form-check-input">
+                            <label for="item_-5829676981963836974" class="form-check-label">身份证</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-6003496440533017039" class="form-check-input">
+                            <label for="item_-6003496440533017039" class="form-check-label">儿童户口本</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-4943693570394573766" class="form-check-input">
+                            <label for="item_-4943693570394573766" class="form-check-label">火车票/机票</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-4254867514916405764" class="form-check-input">
+                            <label for="item_-4254867514916405764" class="form-check-label">酒店预订单</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="item_-1962007196148462592" class="form-check-input">
+                            <label for="item_-1962007196148462592" class="form-check-label">保险单</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 提示信息 -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6>💡 打包小贴士</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li>🎒 <strong>轻装出行</strong> - 只带必需品</li>
+                            <li>📦 <strong>分类打包</strong> - 便于查找</li>
+                            <li>🔒 <strong>贵重物品</strong> - 随身携带</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li>🧳 <strong>行李限重</strong> - 注意航空限制</li>
+                            <li>📱 <strong>电子设备</strong> - 备好充电器</li>
+                            <li>💊 <strong>常用药品</strong> - 有备无患</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="alert alert-info mt-3">
+                    <strong>📱 智能提醒：</strong>您的打包进度会自动保存在浏览器中，下次打开时会恢复您的选择状态。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
