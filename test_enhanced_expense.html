@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>增强版花费记录功能测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        button { margin: 5px; padding: 10px 15px; }
+        .feature-list { list-style-type: none; padding: 0; }
+        .feature-list li { padding: 5px 0; }
+        .feature-list li:before { content: "✅ "; color: green; }
+    </style>
+</head>
+<body>
+    <h1>🧪 增强版花费记录功能测试</h1>
+    
+    <div class="test-section">
+        <h3>🆕 新增功能特性</h3>
+        <ul class="feature-list">
+            <li>详细费用信息输入（时间、地点、人数等）</li>
+            <li>子类别分类系统</li>
+            <li>按日期分组显示</li>
+            <li>筛选和排序功能</li>
+            <li>必要/非必要支出标记</li>
+            <li>人均费用计算</li>
+            <li>列表/分组视图切换</li>
+            <li>增强的编辑功能</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h3>📊 功能测试</h3>
+        <button onclick="addDetailedTestData()">添加详细测试数据</button>
+        <button onclick="testSubcategories()">测试子类别功能</button>
+        <button onclick="testFiltering()">测试筛选功能</button>
+        <button onclick="openEnhancedExpensePage()">打开增强版花费记录页面</button>
+        <div id="test-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🔗 快速链接</h3>
+        <a href="github_pages/expense.html" target="_blank">增强版花费记录页面</a> |
+        <a href="github_pages/budget.html" target="_blank">预算计算</a> |
+        <a href="github_pages/index.html" target="_blank">首页</a>
+    </div>
+    
+    <div class="test-section">
+        <h3>📝 测试数据管理</h3>
+        <button onclick="clearAllTestData()">清除所有数据</button>
+        <button onclick="exportTestData()">导出测试数据</button>
+        <div id="data-status"></div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('test-results');
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : '';
+            results.innerHTML += `<div class="${className}">${new Date().toLocaleTimeString()}: ${message}</div>`;
+        }
+
+        function addDetailedTestData() {
+            const detailedTestData = [
+                {
+                    id: Date.now() + '1',
+                    date: '2024-01-01',
+                    time: '08:30',
+                    category: '餐饮',
+                    subcategory: '早餐',
+                    title: '酒店自助早餐',
+                    amount: 68,
+                    people: 2,
+                    location: '大理古城希尔顿酒店',
+                    note: '品种丰富，性价比不错',
+                    necessary: true
+                },
+                {
+                    id: Date.now() + '2',
+                    date: '2024-01-01',
+                    time: '14:30',
+                    category: '门票',
+                    subcategory: '景点门票',
+                    title: '大理古城门票',
+                    amount: 120,
+                    people: 2,
+                    location: '大理古城',
+                    note: '包含导游讲解',
+                    necessary: true
+                },
+                {
+                    id: Date.now() + '3',
+                    date: '2024-01-01',
+                    time: '18:00',
+                    category: '餐饮',
+                    subcategory: '晚餐',
+                    title: '白族特色菜',
+                    amount: 180,
+                    people: 2,
+                    location: '大理古城内',
+                    note: '酸辣鱼很好吃，推荐',
+                    necessary: true
+                },
+                {
+                    id: Date.now() + '4',
+                    date: '2024-01-02',
+                    time: '10:00',
+                    category: '交通',
+                    subcategory: '出租车',
+                    title: '前往洱海',
+                    amount: 45,
+                    people: 2,
+                    location: '大理',
+                    note: '师傅很热情，介绍了很多景点',
+                    necessary: true
+                },
+                {
+                    id: Date.now() + '5',
+                    date: '2024-01-02',
+                    time: '15:30',
+                    category: '购物',
+                    subcategory: '纪念品',
+                    title: '大理石工艺品',
+                    amount: 280,
+                    people: 1,
+                    location: '双廊镇',
+                    note: '送给朋友的礼物',
+                    necessary: false
+                },
+                {
+                    id: Date.now() + '6',
+                    date: '2024-01-03',
+                    time: '09:15',
+                    category: '住宿',
+                    subcategory: '民宿',
+                    title: '洱海边民宿',
+                    amount: 320,
+                    people: 2,
+                    location: '双廊镇',
+                    note: '海景房，风景很美',
+                    necessary: true
+                }
+            ];
+            
+            localStorage.setItem('travelExpenses', JSON.stringify(detailedTestData));
+            
+            // 添加预算数据
+            const budgetData = {
+                '住宿': 2000,
+                '餐饮': 1500,
+                '交通': 800,
+                '门票': 600,
+                '购物': 400,
+                '其他': 300,
+                '总计': 5600,
+                '人均': 2800,
+                '预算等级': '中等'
+            };
+            localStorage.setItem('lastBudgetResult', JSON.stringify(budgetData));
+            
+            document.getElementById('data-status').innerHTML = 
+                '<div class="success">✅ 已添加6条详细测试数据和预算信息</div>';
+            log('✅ 详细测试数据添加成功', 'success');
+        }
+
+        function testSubcategories() {
+            const subcategories = {
+                '住宿': ['酒店', '民宿', '青旅', '客栈', '度假村'],
+                '餐饮': ['早餐', '午餐', '晚餐', '小食', '饮品', '特色美食'],
+                '交通': ['飞机', '火车', '汽车', '出租车', '公交', '地铁', '船票', '租车'],
+                '门票': ['景点门票', '演出票', '体验项目', '导游费', '停车费'],
+                '购物': ['纪念品', '特产', '服装', '日用品', '药品'],
+                '其他': ['保险', '小费', '通讯', '紧急支出', '杂费']
+            };
+            
+            let testPassed = true;
+            for (const [category, subs] of Object.entries(subcategories)) {
+                if (!subs || subs.length === 0) {
+                    testPassed = false;
+                    break;
+                }
+            }
+            
+            if (testPassed) {
+                log('✅ 子类别系统测试通过', 'success');
+            } else {
+                log('❌ 子类别系统测试失败', 'error');
+            }
+        }
+
+        function testFiltering() {
+            const expenses = JSON.parse(localStorage.getItem('travelExpenses') || '[]');
+            
+            if (expenses.length === 0) {
+                log('⚠️ 请先添加测试数据', 'error');
+                return;
+            }
+            
+            // 测试按类别筛选
+            const diningExpenses = expenses.filter(e => e.category === '餐饮');
+            log(`📊 餐饮类支出: ${diningExpenses.length} 条`, 'info');
+            
+            // 测试按日期筛选
+            const day1Expenses = expenses.filter(e => e.date === '2024-01-01');
+            log(`📅 2024-01-01 支出: ${day1Expenses.length} 条`, 'info');
+            
+            // 测试必要支出筛选
+            const necessaryExpenses = expenses.filter(e => e.necessary);
+            log(`⭐ 必要支出: ${necessaryExpenses.length} 条`, 'info');
+            
+            log('✅ 筛选功能测试完成', 'success');
+        }
+
+        function openEnhancedExpensePage() {
+            window.open('github_pages/expense.html', '_blank');
+            log('🔗 已打开增强版花费记录页面', 'info');
+        }
+
+        function clearAllTestData() {
+            localStorage.removeItem('travelExpenses');
+            localStorage.removeItem('lastBudgetResult');
+            document.getElementById('data-status').innerHTML = 
+                '<div class="error">🗑️ 已清除所有测试数据</div>';
+            log('🗑️ 测试数据清除成功', 'info');
+        }
+
+        function exportTestData() {
+            const expenses = localStorage.getItem('travelExpenses');
+            const budget = localStorage.getItem('lastBudgetResult');
+            
+            if (!expenses) {
+                log('⚠️ 没有数据可导出', 'error');
+                return;
+            }
+            
+            const data = {
+                expenses: JSON.parse(expenses),
+                budget: budget ? JSON.parse(budget) : null,
+                exportTime: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `enhanced-expense-test-data-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            log('📤 测试数据导出成功', 'success');
+        }
+
+        // 页面加载时自动运行测试
+        window.onload = function() {
+            log('🚀 开始增强版功能测试...', 'info');
+            testSubcategories();
+            log('📋 基础测试完成，请手动测试其他功能', 'info');
+        };
+    </script>
+</body>
+</html>

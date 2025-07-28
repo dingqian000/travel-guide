@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>花费记录 - 旅游攻略助手</title>
+
+    <!-- 性能优化 -->
+    <meta name="description" content="旅游花费记录和统计工具，帮您管理旅行预算">
+    <meta name="keywords" content="旅游,花费记录,预算管理,统计">
+
+    <!-- 预加载关键资源 -->
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="preload" href="js/app.js" as="script">
+
+    <!-- 使用更快的CDN -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .expense-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #007bff;
+        }
+        .expense-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .category-badge {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+        .expense-amount {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        .expense-form {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">🌟 旅游攻略助手</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">🏠 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="guide.html">📖 攻略详情</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="budget.html">💰 预算计算</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="expense.html">📊 花费记录</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="checklist.html">🎒 打包清单</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- 统计概览 -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">💰 总花费</h5>
+                        <h3 id="total-expense">¥0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📊 记录数</h5>
+                        <h3 id="expense-count">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📅 天数</h5>
+                        <h3 id="travel-days">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">💵 日均</h5>
+                        <h3 id="daily-average">¥0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- 添加花费表单 -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>➕ 添加花费记录</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="expense-form" class="expense-form">
+                            <div class="mb-3">
+                                <label for="expense-date" class="form-label">📅 日期</label>
+                                <input type="date" class="form-control" id="expense-date" required>
+                                <div class="form-text">选择消费发生的日期</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="expense-time" class="form-label">⏰ 时间</label>
+                                <input type="time" class="form-control" id="expense-time">
+                                <div class="form-text">可选，记录具体消费时间</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="expense-category" class="form-label">🏷️ 类别</label>
+                                <select class="form-select" id="expense-category" required onchange="updateSubcategories()">
+                                    <option value="">请选择类别</option>
+                                    <option value="住宿">🏨 住宿</option>
+                                    <option value="餐饮">🍽️ 餐饮</option>
+                                    <option value="交通">🚗 交通</option>
+                                    <option value="门票">🎫 门票</option>
+                                    <option value="购物">🛍️ 购物</option>
+                                    <option value="其他">📦 其他</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3" id="subcategory-section" style="display: none;">
+                                <label for="expense-subcategory" class="form-label">🔖 子类别</label>
+                                <select class="form-select" id="expense-subcategory">
+                                    <option value="">请选择子类别</option>
+                                </select>
+                                <div class="form-text">更详细的分类</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="expense-title" class="form-label">📋 费用名称</label>
+                                <input type="text" class="form-control" id="expense-title" placeholder="如：午餐、酒店住宿、景点门票等" required>
+                                <div class="form-text">简短描述这笔费用</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="expense-amount" class="form-label">💰 金额</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">¥</span>
+                                    <input type="number" class="form-control" id="expense-amount" step="0.01" min="0" required placeholder="0.00">
+                                </div>
+                                <div class="form-text">输入实际花费金额</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="expense-people" class="form-label">👥 人数</label>
+                                <input type="number" class="form-control" id="expense-people" min="1" value="1">
+                                <div class="form-text">此次消费涉及的人数</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="expense-location" class="form-label">📍 地点</label>
+                                <input type="text" class="form-control" id="expense-location" placeholder="如：大理古城、双廊镇等">
+                                <div class="form-text">可选，记录消费地点</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="expense-note" class="form-label">📝 详细备注</label>
+                                <textarea class="form-control" id="expense-note" rows="3" placeholder="记录更多详细信息，如商家名称、优惠情况、体验感受等"></textarea>
+                                <div class="form-text">可选，记录详细信息</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="expense-necessary">
+                                    <label class="form-check-label" for="expense-necessary">
+                                        ⭐ 标记为必要支出
+                                    </label>
+                                </div>
+                                <div class="form-text">区分必要和非必要支出</div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 btn-lg">
+                                ➕ 添加花费记录
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 预算对比 -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>📊 预算对比</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="budget-comparison">
+                            <p class="text-muted text-center">
+                                <i class="fas fa-chart-pie fa-2x"></i><br>
+                                暂无预算数据<br>
+                                <small>请先在预算计算页面设置预算</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 花费列表和统计 -->
+            <div class="col-lg-8">
+                <!-- 筛选和排序 -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <label for="filter-category" class="form-label">🏷️ 筛选类别</label>
+                                <select class="form-select form-select-sm" id="filter-category" onchange="filterExpenses()">
+                                    <option value="">全部类别</option>
+                                    <option value="住宿">🏨 住宿</option>
+                                    <option value="餐饮">🍽️ 餐饮</option>
+                                    <option value="交通">🚗 交通</option>
+                                    <option value="门票">🎫 门票</option>
+                                    <option value="购物">🛍️ 购物</option>
+                                    <option value="其他">📦 其他</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="filter-date" class="form-label">📅 筛选日期</label>
+                                <input type="date" class="form-control form-control-sm" id="filter-date" onchange="filterExpenses()">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="sort-by" class="form-label">📊 排序方式</label>
+                                <select class="form-select form-select-sm" id="sort-by" onchange="sortExpenses()">
+                                    <option value="date-desc">日期↓</option>
+                                    <option value="date-asc">日期↑</option>
+                                    <option value="amount-desc">金额↓</option>
+                                    <option value="amount-asc">金额↑</option>
+                                    <option value="category">类别</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">🔧 操作</label>
+                                <div>
+                                    <button class="btn btn-outline-primary btn-sm me-1" onclick="exportExpenses()">
+                                        📤 导出
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="clearAllExpenses()">
+                                        🗑️ 清空
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 花费记录列表 -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>📋 花费记录 <span id="expense-list-count" class="badge bg-primary">0</span></h5>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <input type="radio" class="btn-check" name="view-mode" id="view-grouped" checked onchange="toggleViewMode()">
+                            <label class="btn btn-outline-primary" for="view-grouped">📅 按日期分组</label>
+
+                            <input type="radio" class="btn-check" name="view-mode" id="view-list" onchange="toggleViewMode()">
+                            <label class="btn btn-outline-primary" for="view-list">📋 列表模式</label>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="expense-list">
+                            <div class="text-center text-muted py-5">
+                                <div style="font-size: 3rem;">📊</div>
+                                <p>还没有花费记录</p>
+                                <small>请在左侧添加您的第一笔花费</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分类统计图表 -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>📈 分类统计</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="category-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑模态框 -->
+    <div class="modal fade" id="editExpenseModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">✏️ 编辑花费记录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-expense-form">
+                        <input type="hidden" id="edit-expense-id">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit-expense-date" class="form-label">📅 日期</label>
+                                    <input type="date" class="form-control" id="edit-expense-date" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit-expense-time" class="form-label">⏰ 时间</label>
+                                    <input type="time" class="form-control" id="edit-expense-time">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-expense-category" class="form-label">🏷️ 类别</label>
+                            <select class="form-select" id="edit-expense-category" required onchange="updateEditSubcategories()">
+                                <option value="住宿">🏨 住宿</option>
+                                <option value="餐饮">🍽️ 餐饮</option>
+                                <option value="交通">🚗 交通</option>
+                                <option value="门票">🎫 门票</option>
+                                <option value="购物">🛍️ 购物</option>
+                                <option value="其他">📦 其他</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="edit-subcategory-section" style="display: none;">
+                            <label for="edit-expense-subcategory" class="form-label">🔖 子类别</label>
+                            <select class="form-select" id="edit-expense-subcategory">
+                                <option value="">请选择子类别</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-expense-title" class="form-label">📋 费用名称</label>
+                            <input type="text" class="form-control" id="edit-expense-title" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit-expense-amount" class="form-label">💰 金额</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">¥</span>
+                                        <input type="number" class="form-control" id="edit-expense-amount" step="0.01" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit-expense-people" class="form-label">👥 人数</label>
+                                    <input type="number" class="form-control" id="edit-expense-people" min="1" value="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-expense-location" class="form-label">📍 地点</label>
+                            <input type="text" class="form-control" id="edit-expense-location">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-expense-note" class="form-label">📝 详细备注</label>
+                            <textarea class="form-control" id="edit-expense-note" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="edit-expense-necessary">
+                                <label class="form-check-label" for="edit-expense-necessary">
+                                    ⭐ 标记为必要支出
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="updateExpense()">保存修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 使用更快的CDN和异步加载 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/Chart.js/3.9.1/chart.min.js" crossorigin="anonymous"></script>
+    <script src="js/app.js" defer></script>
+</body>
+</html>
