@@ -1,5 +1,5 @@
 
-/* 旅游攻略助手样式 */
+/* 旅游攻略助手样式 - 优化版本 */
 :root {
     --primary-color: #0d6efd;
     --secondary-color: #6c757d;
@@ -10,11 +10,13 @@
     --dark-color: #212529;
 }
 
+/* 字体优化 - 使用系统字体栈提高加载速度 */
 body {
-    font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
     line-height: 1.6;
     color: var(--dark-color);
     background-color: #ffffff;
+    font-display: swap; /* 优化字体加载 */
 }
 
 .navbar {
@@ -192,4 +194,53 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* 性能优化 */
+* {
+    box-sizing: border-box;
+}
+
+/* 图片优化 */
+img {
+    max-width: 100%;
+    height: auto;
+    loading: lazy; /* 懒加载 */
+}
+
+/* 减少重绘和回流 */
+.card, .btn {
+    will-change: transform;
+}
+
+/* 预加载关键资源 */
+.preload {
+    display: none;
+}
+
+/* 优化滚动性能 */
+.scroll-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+}
+
+/* 减少动画对性能的影响 */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 优化表格渲染 */
+.table {
+    table-layout: fixed;
+}
+
+/* 优化文本渲染 */
+.text-optimize {
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
